@@ -27,17 +27,30 @@
 
         <div class="page">
             <a href="/main" class="homeLink">RankChoice</a>
+            <a href="/viewPolls" class="backLink">< Back</a>
+            <a id="sign-in"></a>
             <div id="sign-in-status"></div>
             <div class="contentArea">
-                <a id="sign-in"></a>
-                <div id="sign-in-status"></div>
-                <h1 class="pageTitle">Welcome to RankChoice</h1>
-                <div id="description"></div>
-                <a href="/newPoll" class="menuButton">New Poll</a>
-                <a href="/viewPolls" class="menuButton">View Polls</a>
+                <h1 class="pageTitle">Poll Details</h1>
+                <div id="description">A description of the poll.</div>
+                <div onclick="navSubmitRanking()" class="menuButton">Submit Ranking</div>
+                <div onclick="navViewResults()" class="menuButton">View Results</div>
             </div>
         </div>
         
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            const pid = urlParams.get('pid');
+
+            function navSubmitRanking() {
+                window.location.href = `/submitRank?pid=${pid}`;
+            }
+
+            function navViewResults() {
+                window.location.href = `/resultsDetail?pid=${pid}`;
+            }
+        </script>
+
         <script type="module">
             import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js'
         
@@ -79,23 +92,16 @@
                         user.getIdToken().then(function(accessToken) {
                             document.getElementById('sign-in-status').textContent = `Signed in as ${displayName}`;
                             document.getElementById('sign-in').textContent = 'Sign out';
-                            /*
-                            document.getElementById('account-details').textContent = JSON.stringify({
-                            displayName: displayName,
-                            email: email,
-                            emailVerified: emailVerified,
-                            phoneNumber: phoneNumber,
-                            photoURL: photoURL,
-                            uid: uid,
-                            accessToken: accessToken,
-                            providerData: providerData
-                            }, null, '  '); */
                         });
-                        db.collection("Users").get().then((querySnapshot) => {
-                            querySnapshot.forEach((doc) => {
-                                console.log(`${doc.id} => ${doc.data().name}`);
-                            });
+
+                        db.collection("Polls").doc(pid).get().then((doc) => {
+                            let pollName = doc.data().name;
+                            let pollDescription = doc.data().description;
+                            
+                            document.querySelector(".pageTitle").textContent = `${pollName} - Poll Details`;
+                            document.querySelector("#description").textContent = pollDescription;
                         });
+
                     } else {
                         window.location.href = "/";
                     }

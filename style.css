@@ -6,7 +6,7 @@
             green (Dark Cyan) 0B8989
            
         highlight
-            orange (Flame) E95C2A
+            orange (salmon) salmon
 */
 
 html, body {
@@ -31,16 +31,37 @@ body {
 }
 
     .page > .contentArea {
+        position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
         background: #fff;
         width: 100%;
+        margin: 30px;
+        border-radius: 8px;
+    }
+
+#description, .description {
+    margin-bottom: 30px;
+}
+
+.backLink {
+    position: absolute;
+    top: 50px;
+    left: 30px;
+    color: white;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+    .backLink:hover {
+        cursor: pointer;
+        color: salmon;
     }
 
 #sign-in {
     position: absolute;
-    top: 20px;
+    top: 50px;
     right: 30px;
     color: white;
     transition: color 0.2s;
@@ -48,5 +69,82 @@ body {
 
     #sign-in:hover {
         cursor: pointer;
-        color: #E95C2A;
+        color: salmon;
+    }
+
+#sign-in-status {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+}
+
+.pollListArea {
+    display: flex;
+    flex-direction: column;
+}
+
+.pollArea {
+    cursor: pointer;
+    border: 2px solid #0B8989;
+    border-radius: 8px;
+    margin: 15px 0px;
+    padding: 10px;
+    transition: background 0.2s;
+}
+
+    .pollArea:hover {
+        background: salmon;
+    }
+
+.homeLink {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    text-decoration: none;
+    color: white;
+    transition: color 0.2s;
+}
+
+    .homeLink:hover {
+        cursor: pointer;
+        color: salmon;
+    }
+
+.menuButton {
+    height: 40px;
+    padding: 10px;
+    background: #0D8FA0;
+    margin: 15px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    transition: background 0.2s;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+    .menuButton:hover {
+        background: salmon;
+    }
+
+.inputArea > input {
+    margin-bottom: 15px;
+}
+
+.choice {
+    padding: 10px;
+    border: 2px dashed salmon;
+    border-radius: 8px;
+    margin: 15px 0px;
+    transition: background 0.2s, border 0.2s;
+}
+
+    .choice:hover {
+        cursor: pointer;
+        background: lightsalmon;
+        border: 2px dashed white;
     }

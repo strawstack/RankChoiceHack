@@ -27,14 +27,24 @@
 
         <div class="page">
             <a href="/main" class="homeLink">RankChoice</a>
+            <a href="/main" class="backLink">< Back</a>
             <div id="sign-in-status"></div>
+            <a id="sign-in"></a>
             <div class="contentArea">
-                <a id="sign-in"></a>
-                <div id="sign-in-status"></div>
-                <h1 class="pageTitle">Welcome to RankChoice</h1>
-                <div id="description"></div>
-                <a href="/newPoll" class="menuButton">New Poll</a>
-                <a href="/viewPolls" class="menuButton">View Polls</a>
+                <h1 class="pageTitle">Create New Poll</h1>
+                <div id="description">Create a new poll by filling in the information below.</div>
+                
+                <div class="inputArea">
+                    
+                    <div class="label">Poll Name</div>
+                    <input type="text" id="pollName" />
+
+                    <div class="label">Choices (comma delimited)</div>
+                    <input type="text" id="choices" placeholder="one, two, three"/>
+
+                </div>
+
+                <button class="menuButton submitButton">Submit</button>
             </div>
         </div>
         
@@ -79,17 +89,6 @@
                         user.getIdToken().then(function(accessToken) {
                             document.getElementById('sign-in-status').textContent = `Signed in as ${displayName}`;
                             document.getElementById('sign-in').textContent = 'Sign out';
-                            /*
-                            document.getElementById('account-details').textContent = JSON.stringify({
-                            displayName: displayName,
-                            email: email,
-                            emailVerified: emailVerified,
-                            phoneNumber: phoneNumber,
-                            photoURL: photoURL,
-                            uid: uid,
-                            accessToken: accessToken,
-                            providerData: providerData
-                            }, null, '  '); */
                         });
                         db.collection("Users").get().then((querySnapshot) => {
                             querySnapshot.forEach((doc) => {
@@ -116,6 +115,32 @@
 
             window.addEventListener('load', function() {
                 initApp()
+            });
+
+            document.querySelector(".menuButton.submitButton").addEventListener("click", () => {
+
+                let pollName = document.querySelector("#pollName").value;
+                let choices = document.querySelector("#choices").value;
+
+                if (pollName != "" && choices != "") {
+
+                    db.collection("Polls").add({
+                        name: pollName,
+                        choices: choices.split(",").map(x => x.trim())
+                    })
+                    .then((docRef) => {
+                        
+                        // console.log("Document written with ID: ", docRef.id);
+                        alert("Poll Created Successfully");
+                        window.location.href = "/main";
+
+                    })
+                    .catch((error) => {
+                        console.error("Error adding document: ", error);
+                    });
+                } else {
+                    alert("Fields cannot be empty.");
+                }
             });
         </script>
     </body>
