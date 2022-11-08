@@ -20,11 +20,12 @@
             Firebase Auth (v9 compat): https://firebase.google.com/docs/web/modular-upgrade#window-compat
             Firebase UI: https://firebase.google.com/docs/auth/web/firebaseui
             More Firebase UI: https://github.com/firebase/firebaseui-web#using-firebaseui-for-authentication
+            Firebase Auth Sign out: https://firebase.google.com/docs/auth/web/password-auth
         -->
 
         <h1>Welcome to Rank Choice Hack App</h1>
         <div id="sign-in-status"></div>
-        <div id="sign-in"></div>
+        <a id="sign-in"></a>
         <pre id="account-details"></pre>
         <div id="firebaseui-auth-container"></div>
         
@@ -95,6 +96,16 @@
                     console.log(error);
                 });
             };
+
+            document.getElementById('sign-in').addEventListener("click", () => {
+                const auth = firebaseApp.auth();
+                firebaseApp.auth().signOut().then(() => {
+                    // Success
+                    window.location.href = "/";
+                }).catch((error) => {
+                    console.log("Error on sign out");
+                });
+            });
 
             window.addEventListener('load', function() {
                 initApp()

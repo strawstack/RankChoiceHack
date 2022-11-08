@@ -22,13 +22,13 @@
             More Firebase UI: https://github.com/firebase/firebaseui-web#using-firebaseui-for-authentication
         -->
 
-        <h1>Static Website Template</h1>
+        <h1>Rank Choice Hack App</h1>
         
         <!-- The surrounding HTML is left untouched by FirebaseUI.
         Your app may use that space for branding, controls and other customizations.-->
+        <div id="site">Sign in below</div>
         <div id="firebaseui-auth-container"></div>
-        <div id="site">here</div>
-
+        
         <script type="module">
             import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js'
         
@@ -55,13 +55,13 @@
 
 
             // Initialize Cloud Firestore and get a reference to the service
+            /*
             const db = firebaseApp.firestore();
-
             db.collection("Users").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     console.log(`${doc.id} => ${doc.data().name}`);
                 });
-            });
+            }); */
 
             // Initialize the FirebaseUI Widget using Firebase.
             const auth = firebaseApp.auth();
@@ -83,7 +83,8 @@
                 },
                 // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
                 signInFlow: 'popup',
-                signInSuccessUrl: 'http://localhost:8000',
+                signInSuccessUrl: 'http://localhost:8000/main/index.html',
+                autoUpgradeAnonymousUsers: false,
                 signInOptions: [
                     // Leave the lines as is for the providers you want to offer your users.
                     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
