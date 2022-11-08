@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Static Website Template</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    </head>
+    <body>
+        <h1>Static Website Template</h1>
+
+        <script type="module">
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js'
+        
+            // If you enabled Analytics in your project, add the Firebase SDK for Google Analytics
+            import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-analytics.js'
+        
+            // Add Firebase products that you want to use
+            import { getAuth } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-auth.js'
+            import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-firestore.js'
+
+            // TODO: Replace the following with your app's Firebase project configuration
+            // See: https://firebase.google.com/docs/web/learn-more#config-object
+            const firebaseConfig = {
+                apiKey: "AIzaSyAdpcq2Tp2jvR_6z3KAD6h4ExQvqguQCfw",
+                authDomain: "rank-choice-hack.firebaseapp.com",
+                projectId: "rank-choice-hack",
+                storageBucket: "rank-choice-hack.appspot.com",
+                messagingSenderId: "416522827603",
+                appId: "1:416522827603:web:e7edc2e7e5c0b94f1393a6",
+                measurementId: "G-L3E53H2LG4"
+            };
+
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            // Initialize Cloud Firestore and get a reference to the service
+            const db = firebase.firestore();
+        </script>
+    </body>
+</html>
