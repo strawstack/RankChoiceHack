@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap');
+
+/*
+        base
+            blue (Blue Munsell) 0D8FA0
+            green (Dark Cyan) 0B8989
+           
+        highlight
+            orange (Flame) E95C2A
+*/
+
+html, body {
+    padding: 0px;
+    margin: 0px;
+    height: 100%;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.3rem;
+    color: #444;
+    font-weight: 500;
+    position: relative;
+}
+
+.page {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(0deg, rgba(11,137,137,1) 0%, rgba(13,143,160,1) 100%);
+    min-height: 100%;
+}
+
+    .page > .contentArea {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #fff;
+        width: 100%;
+    }
+
+#sign-in {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    transition: color 0.2s;
+}
+
+    #sign-in:hover {
+        cursor: pointer;
+        color: #E95C2A;
+    }
