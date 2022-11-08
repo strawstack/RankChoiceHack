@@ -9,7 +9,17 @@
         <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     </head>
     <body>
+        <!-- 
+            Firebase setup from: https://firebase.google.com/docs/web/alt-setup
+            Cloud Firestore from: https://firebase.google.com/docs/firestore/quickstart?authuser=1&hl=en#web-version-8 
+        -->
+
         <h1>Static Website Template</h1>
+        
+        <!-- The surrounding HTML is left untouched by FirebaseUI.
+        Your app may use that space for branding, controls and other customizations.-->
+        <div id="firebaseui-auth-container"></div>
+        <div id="site">here</div>
 
         <script type="module">
             import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js'
@@ -18,7 +28,6 @@
             import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-analytics.js'
         
             // Add Firebase products that you want to use
-            import { getAuth } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-auth.js'
             import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-firestore.js'
 
             // TODO: Replace the following with your app's Firebase project configuration
@@ -38,6 +47,13 @@
 
             // Initialize Cloud Firestore and get a reference to the service
             const db = firebase.firestore();
+
+            db.collection("Users").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    console.log(`${doc.id} => ${doc.data().name}`);
+                });
+            });
+
         </script>
     </body>
 </html>
