@@ -18,6 +18,8 @@
             Firebase setup from: https://firebase.google.com/docs/web/alt-setup
             Cloud Firestore from: https://firebase.google.com/docs/firestore/quickstart?authuser=1&hl=en#web-version-8 
             Firebase Auth (v9 compat): https://firebase.google.com/docs/web/modular-upgrade#window-compat
+            Firebase UI: https://firebase.google.com/docs/auth/web/firebaseui
+            More Firebase UI: https://github.com/firebase/firebaseui-web#using-firebaseui-for-authentication
         -->
 
         <h1>Static Website Template</h1>
@@ -65,7 +67,35 @@
             const auth = firebaseApp.auth();
             var ui = new firebaseui.auth.AuthUI(auth);
 
-            console.log(ui);
+            var uiConfig = {
+                callbacks: {
+                    signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+                        // User successfully signed in.
+                        // Return type determines whether we continue the redirect automatically
+                        // or whether we leave that to developer to handle.
+                        return true;
+                    },
+                    uiShown: function() {
+                        // The widget is rendered.
+                        // Hide the loader.
+                        // document.getElementById('loader').style.display = 'none';
+                    }
+                },
+                // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+                signInFlow: 'popup',
+                signInSuccessUrl: 'http://localhost:8000',
+                signInOptions: [
+                    // Leave the lines as is for the providers you want to offer your users.
+                    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                    firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+                ],
+                // Terms of service url.
+                tosUrl: 'https://github.com/strawstack/RankChoiceHack',
+                // Privacy policy url.
+                privacyPolicyUrl: 'https://github.com/strawstack/RankChoiceHack'
+                };
+
+            ui.start('#firebaseui-auth-container', uiConfig);
 
         </script>
         
