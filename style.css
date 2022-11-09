@@ -176,3 +176,58 @@ body {
     counter-increment: section;
     content: counter(section) ". ";
 }
+
+.hr {
+    height: 1px;
+    width: 90%;
+    background: #DDD;
+    border-radius: 50%;
+}
+
+.resultsArea {
+    height: 300px;
+    width: 600px;
+    border: 1px solid #333;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+    .resultsArea .barChartColumn {
+        display: grid;
+        grid-template-rows: 1fr 50px;
+        flex-grow: 1;
+        max-width: 250px;
+    }
+
+        .barChartColumn .barContainer {
+            position: relative;
+        }
+
+            .barChartColumn .barContainer .bar {
+                position: absolute;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+                height: 0px;
+                background: #0B8989;
+                border: 1px solid #333;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .barChartColumn .barContainer .bar .percentLabel {
+                color: white;
+            }
+
+        .barChartColumn .labelContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .barChartColumn .labelContainer .label {
+                color: #444;
+            }

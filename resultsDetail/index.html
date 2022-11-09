@@ -13,6 +13,8 @@
         <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css" />
 
         <link type="text/css" rel="stylesheet" href="../style.css" />
+
+        <script src="https://d3js.org/d3.v7.min.js"></script>
     </head>
     <body>
         <!-- 
@@ -32,7 +34,12 @@
             <div id="sign-in-status"></div>
             <div class="contentArea">
                 <h1 class="pageTitle">Results</h1>
-                <div id="description">Results for the poll are displayed below.</div>
+                <div id="description">Final results for the poll are displayed below.</div>
+                <div class="resultsArea"></div>
+                <div class="hr"></div>
+                <h2 class="pageTitle">Rank Choice Voting Explained</h2>
+                <div class="description">Counting votes with rank choice voting follows a specific process. The process used to count votes for this poll is explained below.</div>
+                <div class="explinationArea"></div>
             </div>
         </div>
         
@@ -40,8 +47,173 @@
             const urlParams = new URLSearchParams(window.location.search);
             const pid = urlParams.get('pid');
 
+            function createBarChartColumn(name, percent) {
+                let barChartColumn = document.createElement("div");
+                barChartColumn.className = "barChartColumn";
+
+                let barContainer = document.createElement("div");
+                barContainer.className = "barContainer";
+
+                let labelContainer = document.createElement("div");
+                labelContainer.className = "labelContainer";
+
+                barChartColumn.append(barContainer);
+                barChartColumn.append(labelContainer);
+
+                let bar = document.createElement("div");
+                bar.className = "bar";
+
+                let chartHeight = 300; 
+                let labelHeight = 50;
+                let height = chartHeight - labelHeight;
+                bar.style.height = `${Math.floor(height * percent)}px`;
+
+                barContainer.append(bar);
+
+                let percentLabel = document.createElement("div");
+                percentLabel.className = "percentLabel";
+                percentLabel.textContent = `${Math.floor(percent * 1000) / 10}%`;
+
+                bar.append(percentLabel);
+
+                let label = document.createElement("div");
+                label.className = "label";
+                label.textContent = name;
+
+                labelContainer.append(label);
+
+                return barChartColumn;
+            }
+
             function navBack() {
                 window.location.href = `/pollDetail?pid=${pid}`;
+            }
+
+            function arrayDescending(result) {
+                let lst = [];
+                for (let k in result) {
+                    lst.push({
+                        choice: k,
+                        count: result[k]
+                    });
+                }
+                lst.sort((a, b) => b.count - a.count);
+                return lst;
+            }
+
+            function arrayDescendingPercent(result) {
+                let total = 0;
+                let lst = [];
+                for (let k in result) {
+                    total += result[k];
+                }
+                for (let k in result) {
+                    lst.push({
+                        choice: k,
+                        percent: result[k] / total
+                    });
+                }
+                lst.sort((a, b) => b.percent - a.percent);
+                return lst;
+            }
+
+            function displayPercent(result) {
+                let total = 0;
+                let newResult = {};
+                for (let k in result) {
+                    let count = result[k];
+                    total += count;
+                }
+                for (let k in result) {
+                    let count = result[k];
+                    newResult[k] = count / total;
+                }
+                return newResult;
+            }
+
+            function winnerExists(total, result) {
+                if (result === null) {
+                    return false;
+                }
+                for (let choice in result) {
+                    let count = result[choice];
+                    if ((count / total) > 0.5) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function totalResult(rankings) {
+                return rankings.filter(x => x() != null).length;
+            }
+    
+            function countResult(choices, rankings) {
+                let counts = {};
+                for (let ranking of rankings) {
+                    let vote = ranking();
+                    if (vote != null) {
+                        if (!(vote in counts)) {
+                            counts[vote] = 0;
+                        }
+                        counts[vote] += 1;
+                    }
+                }
+                return counts;
+            }
+
+            function rankChoiceVote(choices, rankings) {
+
+                let results = [];
+
+                // Each ranking converts to a function that will return
+                // that users current vote until incremented
+                rankings = rankings.map(ranking => {
+                    let index = 0;
+                    return (increment) => {
+                        if (increment === undefined) {
+                            increment = 0;
+                        }
+                        let vote = null;
+                        if (index < ranking.length) {
+                            vote = ranking[index];
+                        }
+                        index += increment;
+                        return vote;
+                    };
+                });
+
+                // Calcualte until a choice passes 50%
+                let total = null;
+                let result = null;
+                while (total == null || result == null || !winnerExists(total, result)) {
+                    total = totalResult(rankings);
+                    result = countResult(choices, rankings);
+                    results.push(result);
+
+                    // Remove lowest choice
+                    let lst = arrayDescending(result);
+                    let lowestChoice = lst[lst.length - 1].choice;
+                    rankings = rankings.map(rank => {
+                        if (rank() === lowestChoice) {
+                            rank(1);
+                        }
+                        return rank;
+                    });
+                }
+
+                let finalResult = results[results.length - 1];
+                let finalResultPercent = displayPercent(finalResult);
+                let finalResultList = arrayDescendingPercent(finalResult);                
+                let resultsArea = document.querySelector(".resultsArea");
+
+                console.log(finalResultList);
+
+                for (let nameCount of finalResultList) {
+                    resultsArea.append(
+                        createBarChartColumn(nameCount.choice, nameCount.percent)
+                    );
+                }
             }
         </script>
 
@@ -96,9 +268,14 @@
                             db.collection("Rankings").where("poll", "==", pid)
                                 .get()
                                 .then((querySnapshot) => {
+                                    let rankings = [];
                                     querySnapshot.forEach((doc) => {
-                                        console.log(doc.data().ranking);
+                                        rankings.push(doc.data().ranking);
                                     });
+
+                                    // Calculate steps and final results
+                                    let results = rankChoiceVote(pollChoices, rankings);
+
                                 });
                         });
                     } else {
