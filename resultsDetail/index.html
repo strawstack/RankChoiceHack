@@ -26,16 +26,25 @@
         -->
 
         <div class="page">
+            <a href="/main" class="homeLink">RankChoice</a>
+            <div onclick="navBack()" class="backLink">< Back</div>
+            <a id="sign-in"></a>
+            <div id="sign-in-status"></div>
             <div class="contentArea">
-                <a id="sign-in"></a>
-                <div id="sign-in-status"></div>
-                
-                <h1 class="pageTitle">Page Title</h1>
-                <div id="description"></div>
-                
+                <h1 class="pageTitle">Results</h1>
+                <div id="description">Results for the poll are displayed below.</div>
             </div>
         </div>
         
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            const pid = urlParams.get('pid');
+
+            function navBack() {
+                window.location.href = `/pollDetail?pid=${pid}`;
+            }
+        </script>
+
         <script type="module">
             import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js'
         
@@ -77,21 +86,20 @@
                         user.getIdToken().then(function(accessToken) {
                             document.getElementById('sign-in-status').textContent = `Signed in as ${displayName}`;
                             document.getElementById('sign-in').textContent = 'Sign out';
-                            document.getElementById('account-details').textContent = JSON.stringify({
-                            displayName: displayName,
-                            email: email,
-                            emailVerified: emailVerified,
-                            phoneNumber: phoneNumber,
-                            photoURL: photoURL,
-                            uid: uid,
-                            accessToken: accessToken,
-                            providerData: providerData
-                            }, null, '  ');
                         });
-                        db.collection("Users").get().then((querySnapshot) => {
-                            querySnapshot.forEach((doc) => {
-                                console.log(`${doc.id} => ${doc.data().name}`);
-                            });
+                        db.collection("Polls").doc(pid).get().then((doc) => {
+                            let pollName = doc.data().name;
+                            let pollDescription = doc.data().description;
+                            let pollChoices = doc.data().choices;
+                            document.querySelector(".pageTitle").textContent = `${pollName} - Results`;
+
+                            db.collection("Rankings").where("poll", "==", pid)
+                                .get()
+                                .then((querySnapshot) => {
+                                    querySnapshot.forEach((doc) => {
+                                        console.log(doc.data().ranking);
+                                    });
+                                });
                         });
                     } else {
                         // User is signed out.

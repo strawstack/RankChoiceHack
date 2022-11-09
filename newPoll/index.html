@@ -90,11 +90,6 @@
                             document.getElementById('sign-in-status').textContent = `Signed in as ${displayName}`;
                             document.getElementById('sign-in').textContent = 'Sign out';
                         });
-                        db.collection("Users").get().then((querySnapshot) => {
-                            querySnapshot.forEach((doc) => {
-                                console.log(`${doc.id} => ${doc.data().name}`);
-                            });
-                        });
                     } else {
                         window.location.href = "/";
                     }

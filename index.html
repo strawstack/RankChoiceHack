@@ -56,16 +56,6 @@
             // Initialize Firebase
             const firebaseApp = firebase.initializeApp(firebaseConfig);
 
-
-            // Initialize Cloud Firestore and get a reference to the service
-            /*
-            const db = firebaseApp.firestore();
-            db.collection("Users").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    console.log(`${doc.id} => ${doc.data().name}`);
-                });
-            }); */
-
             // Initialize the FirebaseUI Widget using Firebase.
             const auth = firebaseApp.auth();
             var ui = new firebaseui.auth.AuthUI(auth);
@@ -86,7 +76,7 @@
                 },
                 // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
                 signInFlow: 'popup',
-                signInSuccessUrl: 'http://localhost:8000/main/index.html',
+                signInSuccessUrl: "/main",
                 autoUpgradeAnonymousUsers: false,
                 signInOptions: [
                     // Leave the lines as is for the providers you want to offer your users.

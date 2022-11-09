@@ -97,7 +97,6 @@
                         db.collection("Polls").doc(pid).get().then((doc) => {
                             let pollName = doc.data().name;
                             let pollDescription = doc.data().description;
-                            
                             document.querySelector(".pageTitle").textContent = `${pollName} - Poll Details`;
                             document.querySelector("#description").textContent = pollDescription;
                         });
