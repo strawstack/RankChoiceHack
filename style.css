@@ -12,7 +12,6 @@
 html, body {
     padding: 0px;
     margin: 0px;
-    height: 100%;
 }
 
 body {
@@ -24,8 +23,8 @@ body {
 }
 
 .page {
+    min-height: 100vh;
     background: linear-gradient(0deg, rgba(11,137,137,1) 0%, rgba(13,143,160,1) 100%);
-    min-height: 100%;
 }
 
     .page > .contentArea {
@@ -41,6 +40,7 @@ body {
 
 #description, .description {
     margin-bottom: 30px;
+    max-width: 600px;
 }
 
 .backLink {
@@ -138,23 +138,41 @@ body {
     margin-bottom: 15px;
 }
 
-#choiceRankingArea {
+.submitRankPage .area {
+    border: 3px dashed #333;
+}
+
+.submitRankPage .storage {
+    min-height: 100px;
+    width: 600px;
+    margin-bottom: 20px;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.submitRankPage .ranking {
+    counter-reset: section;
+    min-height: 300px;
+    width: 270px;
+}
+
+.submitRankPage .choice {
+    height: 50px;
+    border: 2px solid #333;
+    margin: 5px;
+    display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 15px;
+    padding: 0px 10px;
+    cursor: grab;
+    background: #0D8FA0;
+    color: white;
 }
 
-.choice {
-    padding: 10px;
-    border: 2px dashed salmon;
-    border-radius: 8px;
-    transition: background 0.2s, border 0.2s;
+.submitRankPage .storage .choice {
+    width: 250px;
 }
 
-    .choice:hover {
-        cursor: pointer;
-        background: lightsalmon;
-        border: 2px dashed white;
-    }
+.submitRankPage .ranking .choice::before {
+    counter-increment: section;
+    content: counter(section) ". ";
+}

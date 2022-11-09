@@ -30,16 +30,22 @@
             <div onclick="navBack()" class="backLink">< Back</div>
             <a id="sign-in"></a>
             <div id="sign-in-status"></div>
-            <div class="contentArea">
+            <div class="contentArea submitRankPage">
                 
                 <h1 class="pageTitle"></h1>
                 <div id="description"></div>
-                <div class="description">Order the choices below from best (top) to worst (bottom):</div>
+
+                <div class="area storage"></div>
+
+                <div class="description">Drag any number of choices from the box above to the ranking area below:</div>
+
+                <div class="area ranking"></div>
                 
-                <div id="choiceRankingArea"></div>
                 <div class="menuButton submitButton">Submit</div>
             </div>
         </div>
+
+        <script src="./Sortable.js"></script>
 
         <script>
             const urlParams = new URLSearchParams(window.location.search);
@@ -47,46 +53,6 @@
 
             function navBack() {
                 window.location.href = `/pollDetail?pid=${pid}`;
-            }
-
-            function activateSortable() {
-                let dragged;
-                let id;
-                let index;
-                let indexDrop;
-                let list;
-
-                document.addEventListener("dragstart", ({target}) => {
-                    dragged = target;
-                    id = target.id;
-                    list = target.parentNode.children;
-                    for(let i = 0; i < list.length; i += 1) {
-                        if(list[i] === dragged){
-                            index = i;
-                        }
-                    }
-                });
-
-                document.addEventListener("dragover", (event) => {
-                    event.preventDefault();
-                });
-
-                document.addEventListener("drop", ({target}) => {
-                    if(target.className.indexOf("dropzone") !== -1  && target.id !== id) {
-                        dragged.remove( dragged );
-                        for(let i = 0; i < list.length; i += 1) {
-                            if(list[i] === target){
-                                indexDrop = i;
-                            }
-                        }
-                        //console.log(index, indexDrop);
-                        if(index > indexDrop) {
-                            target.before( dragged );
-                        } else {
-                            target.after( dragged );
-                        }
-                    }
-                });
             }
         </script>
         
@@ -141,21 +107,30 @@
                             document.querySelector(".pageTitle").textContent = `${pollName} - Submit Ranking`;
                             document.querySelector("#description").textContent = pollDescription;
 
-                            let choiceRankArea = document.querySelector("#choiceRankingArea");
-                            let i = 0;
+                            let choiceRankArea = document.querySelector(".submitRankPage .storage");
                             for (let choice of pollChoices) {
                                 let choice_div = document.createElement("div");
-                                choice_div.className = "choice dropzone";
+                                choice_div.className = "choice";
                                 choice_div.textContent = choice;
-                                choice_div.draggable = true;
-                                choice_div.id = i; i += 1;
                                 choiceRankArea.append(choice_div);
                             }
-                            activateSortable();
+                        });
+
+                        let storage = document.querySelector('.submitRankPage .storage');
+                        let ranking = document.querySelector('.submitRankPage .ranking');
+
+                        new Sortable(storage, {
+                            group: 'shared',
+                            animation: 150
+                        });
+
+                        new Sortable(ranking, {
+                            group: 'shared',
+                            animation: 150
                         });
 
                         document.querySelector(".submitButton").addEventListener("click", () => {
-                            let choices = Array.from(document.querySelectorAll(".choice")).map(x => x.textContent);
+                            let choices = Array.from(document.querySelectorAll(".submitRankPage .ranking .choice")).map(x => x.textContent);
                             db.collection("Rankings").add({
                                 user: uid,
                                 poll: pid,
