@@ -35,7 +35,7 @@
                 <h1 class="pageTitle">Poll Details</h1>
                 <div id="description">A description of the poll.</div>
                 <div onclick="navSubmitRanking()" class="menuButton">Submit Ranking</div>
-                <div onclick="navViewResults()" class="menuButton">View Results</div>
+                <div onclick="navViewResults()" class="menuButton results" data-deactive="true">View Results</div>
             </div>
         </div>
         
@@ -48,7 +48,10 @@
             }
 
             function navViewResults() {
-                window.location.href = `/resultsDetail?pid=${pid}`;
+                let isDeactive = document.querySelector(".menuButton.results").dataset.deactive;
+                if (!(isDeactive === "true")) {
+                    window.location.href = `/resultsDetail?pid=${pid}`;
+                }
             }
         </script>
 
@@ -100,6 +103,12 @@
                             let pollDescription = doc.data().description;
                             document.querySelector(".pageTitle").textContent = `${pollName} - Poll Details`;
                             document.querySelector("#description").textContent = pollDescription;
+                        });
+
+                        db.collection("Rankings").where("user", "==", uid).get().then((querySnapshot) => {
+                            querySnapshot.forEach((doc) => {
+                                document.querySelector(".menuButton.results").dataset.deactive = "false";
+                            });
                         });
 
                     } else {

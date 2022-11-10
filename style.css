@@ -130,6 +130,11 @@ body {
         background: salmon;
     }
 
+    .menuButton[data-deactive="true"] {
+        background: grey;
+        cursor: not-allowed;
+    }
+
 .submitButton {
     margin-top: 20px;
 }
