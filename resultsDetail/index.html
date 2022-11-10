@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>RankChoice</title>
+        <title>Rankify</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/x-icon" href="../favicon.ico">
 
         <script src="https://www.gstatic.com/firebasejs/9.13.0/firebase-app-compat.js"></script>
         <script src="https://www.gstatic.com/firebasejs/9.13.0/firebase-firestore-compat.js"></script>
@@ -28,7 +29,7 @@
         -->
 
         <div class="page">
-            <a href="/main" class="homeLink">RankChoice</a>
+            <a href="/main" class="homeLink">Rankify</a>
             <div onclick="navBack()" class="backLink">< Back</div>
             <a id="sign-in"></a>
             <div id="sign-in-status"></div>
@@ -46,6 +47,80 @@
         <script>
             const urlParams = new URLSearchParams(window.location.search);
             const pid = urlParams.get('pid');
+
+            function getWinner(result) {
+                let total = 0;
+                for (let k in result) {
+                    total += result[k];
+                }
+                for (let k in result) {
+                    if ((result[k] / total) > 0.5) {
+                        return k;
+                    }
+                }
+                return "";
+            }
+
+            function getRedistribution(before, after) {
+                let gain = [];
+                for (let k in after) {
+                    let afterValue = after[k];
+                    let beforeValue = (k in before) ? before[k] : 0;
+                    let diff = afterValue - beforeValue;
+                    if (diff > 0) {
+                        gain.push(`${k} gained ${diff} votes`);
+                    }
+                }
+                return gain.join(", ") + ".";
+            }
+
+            function getWorstChoice(before, after) {
+                // before { choiceName(string): votes(int) }
+                let d = {};
+                for (let k in before) {
+                    d[k] = true;
+                }
+                for (let k in after) {
+                    delete d[k];
+                }
+                return Object.keys(d)[0];
+            }
+
+            function createText(i, results) {
+                let text = document.createElement("p");
+                text.className = "text";
+                if (i === 0) {
+                    text.textContent = "As seen in the chart above, Rank Choice Voting begins by examining the totals given everyone's first choice.";
+                } else if (i === 1){
+                    let worstChoice = getWorstChoice(results[i - 1], results[i]);
+                    let redistributeStr = getRedistribution(results[i - 1], results[i]);
+                    text.textContent = `Since none of the above choices exceed 50%, the worst performing choice is eliminated (choice: "${worstChoice}"). For all votes that ranked, "${worstChoice}" as their top option, the next ranked choice from those votes is redistributed to the remaining choices. `;
+                    text.textContent += `The votes from "${worstChoice}" were redistributed in the following manner: ${redistributeStr}`;
+                } else if (i === results.length - 1) {
+                    let worstChoice = getWorstChoice(results[i - 1], results[i]);
+                    let redistributeStr = getRedistribution(results[i - 1], results[i]);
+                    let winner = getWinner(results[i]);
+                    text.textContent = `The votes from "${worstChoice}" (which was eliminated) were redistributed in the following manner: ${redistributeStr} `;
+                    text.textContent += `The winner is "${winner}" as this choice has more than 50% of the vote!`
+                } else {
+                    let worstChoice = getWorstChoice(results[i - 1], results[i]);
+                    let redistributeStr = getRedistribution(results[i - 1], results[i]);
+                    text.textContent = `The votes from "${worstChoice}" (which was eliminated) were redistributed in the following manner: ${redistributeStr} `;
+                }
+                return text;
+            }
+
+            function createBarChart(result) {
+                let resultsArea = document.createElement("div");
+                resultsArea.className = "resultsArea";
+                let resultList = arrayDescendingPercent(result);
+                for (let nameCount of resultList) {
+                    resultsArea.append(
+                        createBarChartColumn(nameCount.choice, nameCount.percent)
+                    );
+                }
+                return resultsArea;
+            }
 
             function createBarChartColumn(name, percent) {
                 let barChartColumn = document.createElement("div");
@@ -204,15 +279,24 @@
 
                 let finalResult = results[results.length - 1];
                 let finalResultPercent = displayPercent(finalResult);
-                let finalResultList = arrayDescendingPercent(finalResult);                
+                let finalResultList = arrayDescendingPercent(finalResult);
                 let resultsArea = document.querySelector(".resultsArea");
-
-                console.log(finalResultList);
 
                 for (let nameCount of finalResultList) {
                     resultsArea.append(
                         createBarChartColumn(nameCount.choice, nameCount.percent)
                     );
+                }
+
+                let explainArea = document.querySelector(".explinationArea");
+
+                for (let i in results) {
+                    let result = results[i];
+                    let chart = createBarChart(result);
+                    explainArea.append(chart);
+
+                    let text = createText(parseInt(i, 10), results);
+                    explainArea.append(text);
                 }
             }
         </script>
@@ -279,10 +363,7 @@
                                 });
                         });
                     } else {
-                        // User is signed out.
-                        document.getElementById('sign-in-status').textContent = 'Signed out';
-                        document.getElementById('sign-in').textContent = 'Sign in';
-                        document.getElementById('account-details').textContent = 'null';
+                        window.location.href = "/";
                     }
                 }, function(error) {
                     console.log(error);

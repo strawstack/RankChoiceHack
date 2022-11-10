@@ -231,3 +231,7 @@ body {
             .barChartColumn .labelContainer .label {
                 color: #444;
             }
+
+.explinationArea .text {
+    max-width: 600px;
+}
