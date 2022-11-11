@@ -41,7 +41,7 @@
                     <input type="text" id="pollName" />
 
                     <div class="label">Description</div>
-                    <input type="text" id="description" />
+                    <input type="text" id="poll_description" />
 
                     <div class="label">Choices (comma delimited)</div>
                     <input type="text" id="choices" placeholder="one, two, three"/>
@@ -119,14 +119,14 @@
             document.querySelector(".menuButton.submitButton").addEventListener("click", () => {
 
                 let pollName = document.querySelector("#pollName").value;
-                let description = document.querySelector("#description").value;
+                let pollDescription = document.querySelector("#poll_description").value;
                 let choices = document.querySelector("#choices").value;
 
                 if (pollName != "" && choices != "") {
 
                     db.collection("Polls").add({
                         name: pollName,
-                        description: description,
+                        description: pollDescription,
                         choices: choices.split(",").map(x => x.trim())
                     })
                     .then((docRef) => {
