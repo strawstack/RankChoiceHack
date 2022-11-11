@@ -105,9 +105,11 @@
                             document.querySelector("#description").textContent = pollDescription;
                         });
                         
-                        db.collection("Rankings").where("user", "==", uid).get().then((querySnapshot) => {
+                        db.collection("Rankings").where("poll", "==", pid).get().then((querySnapshot) => {
                             querySnapshot.forEach((doc) => {
-                                document.querySelector(".menuButton.results").dataset.deactive = "false";
+                                if (doc.data().user == uid) {
+                                    document.querySelector(".menuButton.results").dataset.deactive = "false";
+                                }
                             });
                         });
 
