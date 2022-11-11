@@ -24,9 +24,13 @@ Data is retrieved from `Firestore` using Javascript and the `Firestore API`. Dat
 
 # Firestore Data Model
 
+## Collections 
+- Polls (contains Poll documents)
+- Rankings (contains Ranking documents)
 
-
-Polls 
+## Documents
+- Poll (name: string, description: string, choices: string array)
+- Ranking (user: string id, poll: string id, ranking: string array)
 
 # Host Your Own Version of this App
 
