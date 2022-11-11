@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500&family=Roboto+Flex:opsz,wght@8..144,500&display=swap');
 
 /*
         base
@@ -15,7 +16,7 @@ html, body {
 }
 
 body {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Roboto Flex', sans-serif;
     font-size: 1.3rem;
     color: #444;
     font-weight: 500;
@@ -54,7 +55,7 @@ body {
 
     .backLink:hover {
         cursor: pointer;
-        color: salmon;
+        color: #77D5E6;
     }
 
 #sign-in {
@@ -67,7 +68,7 @@ body {
 
     #sign-in:hover {
         cursor: pointer;
-        color: salmon;
+        color: #77D5E6;
     }
 
 #sign-in-status {
@@ -92,7 +93,7 @@ body {
 }
 
     .pollArea:hover {
-        background: salmon;
+        background: #77D5E6;
     }
 
 .homeLink {
@@ -106,7 +107,7 @@ body {
 
     .homeLink:hover {
         cursor: pointer;
-        color: salmon;
+        color: #77D5E6;
     }
 
 .menuButton {
@@ -127,7 +128,7 @@ body {
 }
 
     .menuButton:hover {
-        background: salmon;
+        background: #77D5E6;
     }
 
     .menuButton[data-deactive="true"] {
