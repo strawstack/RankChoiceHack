@@ -104,7 +104,7 @@
                             document.querySelector(".pageTitle").textContent = `${pollName} - Poll Details`;
                             document.querySelector("#description").textContent = pollDescription;
                         });
-
+                        
                         db.collection("Rankings").where("user", "==", uid).get().then((querySnapshot) => {
                             querySnapshot.forEach((doc) => {
                                 document.querySelector(".menuButton.results").dataset.deactive = "false";
